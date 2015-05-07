@@ -14,13 +14,11 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        let fetcher = DataFetcher(url: "https://itunes.apple.com/us/rss/toppaidapplications/limit=100/json")
     }
 
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
+
 
 
 }
