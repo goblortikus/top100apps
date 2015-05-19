@@ -60,7 +60,21 @@ class DataFetcher: NSObject, NSURLConnectionDataDelegate {
         
         if error == nil {
             if let dataDict = jsonObject as? NSDictionary {
-                println("\(dataDict)")
+                //println("\(dataDict)")
+                if let entries = dataDict["feed"]?["entry"] as? [NSDictionary]{
+                    var titles = [String]()
+                    for (index, entry) in enumerate(entries) {
+                        if let title = entry["title"]?["label"] as? String {
+                            titles.append(title)
+                        } else {
+                            reportFailure("Could not get title for item \(index + 1)")
+                        }
+                    }
+                    println("\(titles)")
+                } else {
+                    reportFailure("Entries array could not be found")
+                }
+                
             } else {
                 reportFailure("Error: converted JSON data is not an NSDictionary")
             }
