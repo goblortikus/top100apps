@@ -44,14 +44,28 @@ class DataFetcher: NSObject, NSURLConnectionDataDelegate {
     }
 
     func connectionDidFinishLoading(connection: NSURLConnection) {
-        println(NSString(data: receivedData, encoding: 4))
+        convertDataToJSON()
     }
     
     func connection(connection: NSURLConnection, didFailWithError error: NSError) {
         reportFailure(error.description)
     }
     
-
-    
     /* END NSURLConnectionDataDelegate protocol methods */
+    
+    func convertDataToJSON() {
+        var error : NSError?
+        
+        let jsonObject : AnyObject? = NSJSONSerialization.JSONObjectWithData(receivedData, options: NSJSONReadingOptions.AllowFragments, error: &error)
+        
+        if error == nil {
+            if let dataDict = jsonObject as? NSDictionary {
+                println("\(dataDict)")
+            } else {
+                reportFailure("Error: converted JSON data is not an NSDictionary")
+            }
+        } else {
+            reportFailure("Error: NSJSONSerialization couldn't convert receivedData")
+        }
+    }
 }
