@@ -8,13 +8,20 @@
 
 import Foundation
 
+protocol DataFetcherDelegate {
+    func fetchSuccess(titles: [String], url: String)
+    func fetchFailure(message: String, url: String)
+}
+
+
 class DataFetcher: NSObject, NSURLConnectionDataDelegate {
     let url: String
-    
     var receivedData: NSMutableData!
+    let delegate: DataFetcherDelegate
     
-    init(url: String) {
+    init(url: String, delegate: DataFetcherDelegate) {
         self.url = url
+        self.delegate = delegate
         super.init()
         
         if let url = NSURL(string: url) {
@@ -30,7 +37,7 @@ class DataFetcher: NSObject, NSURLConnectionDataDelegate {
     }
     
     func reportFailure(message: String) {
-        println(message)
+        delegate.fetchFailure(message, url: url)
     }
     
     /* START NSURLConnectionDataDelegate protocol methods */
@@ -70,7 +77,9 @@ class DataFetcher: NSObject, NSURLConnectionDataDelegate {
                             reportFailure("Could not get title for item \(index + 1)")
                         }
                     }
-                    println("\(titles)")
+                    
+                    delegate.fetchSuccess(titles, url: url)
+                    
                 } else {
                     reportFailure("Entries array could not be found")
                 }

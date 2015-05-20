@@ -8,17 +8,27 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, DataFetcherDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        let fetcher = DataFetcher(url: "https://itunes.apple.com/us/rss/toppaidapplications/limit=100/json")
+        let fetcher = DataFetcher(url: "https://itunes.apple.com/us/rss/toppaidapplications/limit=100/json", delegate: self)
     }
 
+    func fetchSuccess(titles: [String], url: String) {
+        println("Request: '\(url)' succeeded!")
+        
+        for (position, title) in enumerate(titles) {
+            println("Position  \(position + 1): \(title)")
+        }
+    }
 
+    func fetchFailure(message: String, url: String) {
+        println("Request: '\(url)' failed for the following reason: '\(message)'")
+    }
 
 
 }
