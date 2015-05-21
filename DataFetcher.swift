@@ -67,7 +67,6 @@ class DataFetcher: NSObject, NSURLConnectionDataDelegate {
         
         if error == nil {
             if let dataDict = jsonObject as? NSDictionary {
-                //println("\(dataDict)")
                 if let entries = dataDict["feed"]?["entry"] as? [NSDictionary]{
                     var titles = [String]()
                     for (index, entry) in enumerate(entries) {
